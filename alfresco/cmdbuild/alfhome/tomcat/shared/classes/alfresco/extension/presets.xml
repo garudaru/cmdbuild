@@ -1,0 +1,14 @@
+<presets>
+	<models>
+		<model id="alfresco" description="Alfresco" type="cmis:document" secondary-types="P:cm:author P:cm:titled P:cmdbuild:classifiable">
+			<author>cm:author</author>
+			<description>cm:description</description>
+			<category>cmdbuild:classification</category>
+			<property-converters>
+				<converter type="org.cmdbuild.dms.cmis.alfresco.CategoryConverter">
+					<property>cmdbuild:classification</property>
+				</converter>
+			</property-converters>
+		</model>
+	</models>
+</presets>

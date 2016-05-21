@@ -1,0 +1,137 @@
+version : '2'
+
+services:
+ cmdbuild:
+  image: garudaru/cmdbuild
+  ports:
+   - 80:8080
+  restart: always
+  env_file:
+    - '.env'
+  depends_on:
+   - pgsql
+  links:
+   - pgsql:pgsql
+  volumes:
+   - /logs/cmdb:/usr/local/tomcat/logs 
+   - .data/cmdbuild/conf/cmdbuildCustomModel.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf/cmdbuildCustomModel.xml
+   - .data/cmdbuild/conf/metadataAutocompletion.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf/metadataAutocompletion.xml
+   - .data/cmdbuild/classes/presets.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/classes/org/cmdbuild/dms/cmis/model/presets.xml
+   - cmdbuploadv:/usr/local/tomcat/webapps/cmdbuild/upload
+  networks:
+   - cmdbuild-network
+
+ pgsql:
+  image: garudaru/postgis
+  restart: always
+  ports:
+   - 5432:5432
+  env_file:
+    - '.env'
+  volumes:
+   - pgsqlv:/var/lib/postgresql/data
+  networks:
+   - cmdbuild-network
+   
+ shark:
+  image: garudaru/shark
+  restart: always 
+  env_file:
+    - '.env'
+  ports:
+   - 8484:8080
+  depends_on:
+   - cmdbuild
+  volumes:
+   - /logs/shark:/usr/local/tomcat/logs 
+  networks:
+   - cmdbuild-network
+  links:
+   - cmdbuild:cmdbuild
+
+ geo:
+  image: garudaru/geoserver 
+  ports:
+   - 8282:8080
+  restart: always 
+  volumes:
+   - /logs/geo:/usr/local/tomcat/logs 
+  networks:
+   - cmdbuild-network
+
+ bim:
+  image: garudaru/bimserver
+  ports:
+   - 8383:8080
+  restart: always 
+  environment:
+     JAVA_OPTS: "-Xms128m -Xmx1024m"
+  volumes:
+   - /logs/bim-log:/usr/local/tomcat/webapps/bimserver/WEB-INF/logs
+   - /logs/bim:/usr/local/tomcat/logs
+  networks:
+   - cmdbuild-network
+
+ alfresco:
+  image: webcenter/rancher-alfresco:v5.1.0-2
+  environment:
+    CIFS_ENABLED: "false"
+    FTP_ENABLED: "false"
+    DB_NAME: alfresco
+    DATABASE_NAME: alfresco
+    DATABASE_HOST: postgres
+    DATABASE_PASSWORD: postgres
+    DATABASE_USER: postgres
+  labels:
+    io.rancher.container.pull_image: always
+  tty: true
+  depends_on:
+   - postgres
+  links:
+   - postgres:db
+  stdin_open: true
+  volumes:
+   - .data/alfresco/extension/cmdbuild-custom-model-context.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuild-custom-model-context.xml
+   - .data/alfresco/extension/cmdbuild-model-context.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuild-model-context.xml
+   - .data/alfresco/extension/cmdbuildCustomModel.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuildCustomModel.xml
+   - .data/alfresco/extension/cmdbuildModel.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuildModel.xml
+#   - .data/alfesco/extension/web-client-config-custom.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/web-client-config-custom.xml
+#   - /logs/alfe/web-extension:/opt/alfresco/tomcat/shared/classes/alfresco/web-extension
+   - .data/alfresco/web-extension/share-config-custom.xml:/opt/alfresco/tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml
+  ports:
+   - 8181:8080/tcp
+  networks:
+   - cmdbuild-network
+   - alfresco-network
+
+ postgres:
+  image: garudaru/postgis
+  restart: always
+  ports:
+   - 5434:5432
+  environment:
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_DB: alfresco
+  volumes:
+  - alfpgsqlv:/var/lib/postgresql/data
+  networks:
+   - alfresco-network
+
+networks:
+   cmdbuild-network:
+     driver: bridge
+   alfresco-network:
+     driver: bridge
+ 
+volumes:
+  cmdbv:
+   driver: local
+  cmdbuploadv:
+   driver: local
+  sharkv:
+   driver: local
+  pgsqlv:
+   driver: local
+  alfpgsqlv:
+   driver: local

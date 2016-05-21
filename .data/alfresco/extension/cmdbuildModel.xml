@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The important part here is the name - Note: the use of the my: namespace which is defined further on in the document -->
+<model name="cmdbuild:module" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<description>Custom Model for CMDBuild</description>
+	<author>CMDBuild Team</author>
+	<version>1.0</version>
+
+	<imports>
+		<!-- Import Alfresco Dictionary Definitions -->
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<!-- Import Alfresco Content Domain Model Definitions -->
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+	</imports>
+
+	<!-- Introduction of new namespaces defined by this model -->
+	<namespaces>
+		<namespace uri="org.cmdbuild.dms.alfresco" prefix="cmdbuild" />
+	</namespaces>
+
+	<aspects>
+		<aspect name="cmdbuild:classifiable">
+			<title>Classification</title>
+			<properties>
+				<property name="cmdbuild:classification">
+					<type>d:text</type>
+				</property>
+			</properties>
+		</aspect>
+	</aspects>
+
+</model>

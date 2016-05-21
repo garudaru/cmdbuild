@@ -1,0 +1,66 @@
+<presets>
+	<models>
+		<model id="alfresco" description="Alfresco" type="cmis:document" secondary-types="P:cm:author P:cm:titled P:cmdbuild:classifiable">
+			<author>cm:author</author>
+			<description>cm:description</description>
+			<category>cmdbuild:classification</category>
+			<property-converters>
+				<converter type="org.cmdbuild.dms.cmis.alfresco.CategoryConverter">
+					<property>cmdbuild:classification</property>
+				</converter>
+			</property-converters>
+		</model>
+		<model id="alfrescometadata" description="AlfrescoWithMetadata" type="cmis:document" secondary-types="P:cm:author P:cm:titled P:cmdbuild:classifiable">
+			<author>cm:author</author>
+			<description>cm:description</description>
+			<category>cmdbuild:classification</category>
+			<property-converters>
+				<converter type="org.cmdbuild.dms.cmis.alfresco.CategoryConverter">
+					<property>cmdbuild:classification</property>
+				</converter>
+			</property-converters>
+                        <document-types>
+                          <document-type name="Document">
+                            <group name="documentStatistics" secondary-type="P:cmdbuild:documentStatistics">
+                              <metadata name="characters" property="cmdbuild:characters"/>
+                              <metadata name="words" property="cmdbuild:words"/>
+                            </group>
+                            <group name="All" secondary-type="P:cmdbuild:baz">
+                              <metadata name="bazText" property="cmdbuild:bazText"/>
+                              <metadata name="bazInt" property="cmdbuild:bazInt"/>
+                              <metadata name="bazLong" property="cmdbuild:bazLong"/>
+                              <metadata name="bazFloat" property="cmdbuild:bazFloat"/>
+                              <metadata name="bazDate" property="cmdbuild:bazDate"/>
+                              <metadata name="bazDatetime" property="cmdbuild:bazDatetime"/>
+                              <metadata name="bazBoolean" property="cmdbuild:bazBoolean"/>
+                              <metadata name="bazTextWithContraints" property="cmdbuild:bazTextWithContraints"/>
+                            </group>
+                            <!-- group  name="Class" secondary-type="P:cmdbuild:classifiable">
+                              <metadata name="classable" property="cmdbuild:classification"/>
+                            </group -->
+                          </document-type>
+                          <document-type name="Image">
+                            <group name="summary" secondary-type="P:cmdbuild:summary">
+                              <metadata name="summary" property="cmdbuild:summary"/>
+                            </group>
+                            <group name="displayable" secondary-type="P:cmdbuild:displayable">
+                              <metadata name="Width" property="cmdbuild:width"/>
+                              <metadata name="Height" property="cmdbuild:height"/>
+                              <metadata name="Size Ratio (width/height)" property="cmdbuild:sizeRatio"/>
+                            </group>
+                            <group name="imageFormat" secondary-type="P:cmdbuild:imageFormat">
+                              <metadata name="Format" property="cmdbuild:imageFormat"/>
+                              <metadata name="Colored" property="cmdbuild:colored"/>
+                            </group>
+                            <group name="taggable" secondary-type="P:cmdbuild:taggable">
+                              <metadata name="Tags" property="cmdbuild:tags"/>
+                            </group>
+                            <group name="creationDateTime" secondary-type="P:cmdbuild:creationDateTime">
+                              <metadata name="Creation Date" property="cmdbuild:creationDate"/>
+                              <metadata name="Creation date/time" property="cmdbuild:creationDateTime"/>
+                            </group>
+                          </document-type>
+                        </document-types>
+		</model>
+	</models>
+</presets>
