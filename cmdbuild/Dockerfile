@@ -4,10 +4,10 @@ MAINTAINER garudaru <garudaru@gmail.com>
 ARG CMDBUILD_NAME=cmdbuild
 
 ENV CMDBUILD_REPORTS="additional-report-libs-1.5" \
-    WEBAPPCMDBUILD="$CATALINA_HOME/webapps/$CMDBUILD_NAME/"
+    WEBAPPCMDBUILD="$CATALINA_HOME/webapps/$CMDBUILD_NAME/" \
+    CMDBUILD_VERSION="2.4.1" 
 
 ENV CMDBUILD_START_DIR="/opt/cmdbuild" \
-    CMDBUILD_VERSION="2.4.0" \
     CMDBUILD_GET_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/cmdbuild-$CMDBUILD_VERSION.zip" \
     CMDBUILD_REPORTS_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/$CMDBUILD_REPORTS.zip" \
     LIB="http://jdbc.postgresql.org/download/postgresql-9.4.1208.jar" 

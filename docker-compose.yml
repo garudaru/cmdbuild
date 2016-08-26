@@ -14,28 +14,44 @@ services:
    - pgsql:pgsql
   volumes:
    - /logs/cmdb:/usr/local/tomcat/logs 
+#   - /logs/cmdb-conf:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf
+#   - /logs/cmdb-classes:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/classes
+#   - .data/cmdbuild/conf/log4j.conf:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf/log4j.conf
+#   - .data/cmdbuild/conf/auth.conf:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf/auth.conf
    - .data/cmdbuild/conf/cmdbuildCustomModel.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf/cmdbuildCustomModel.xml
    - .data/cmdbuild/conf/metadataAutocompletion.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf/metadataAutocompletion.xml
+#   - .data/cmdbuild/classes/org/cmdbuild/dms/cmis/model/presets.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/classes/org/cmdbuild/dms/cmis/model/presets.xml
    - .data/cmdbuild/classes/presets.xml:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/classes/org/cmdbuild/dms/cmis/model/presets.xml
+   - cmdbv:/usr/local/tomcat/webapps/cmdbuild/WEB-INF/conf
    - cmdbuploadv:/usr/local/tomcat/webapps/cmdbuild/upload
   networks:
    - cmdbuild-network
 
+
  pgsql:
+#  image: garudaru/readypostgis
   image: garudaru/postgis
   restart: always
   ports:
    - 5432:5432
   env_file:
     - '.env'
+#  environment:
+#    POSTGRES_DB:  ""
+#    POSTGRES_PASSWORD: postgres
+#    PGDATA=./postgres/pgdata
+#    POSTGRES_USER: postgres
+#    POSTGRES_DB: cmdbuild 
   volumes:
    - pgsqlv:/var/lib/postgresql/data
+#   - /logs/postgis-data:/var/lib/postgresql/data
+
   networks:
    - cmdbuild-network
-   
+
  shark:
   image: garudaru/shark
-  restart: always 
+  restart: always
   env_file:
     - '.env'
   ports:
@@ -48,12 +64,16 @@ services:
    - cmdbuild-network
   links:
    - cmdbuild:cmdbuild
+#  entrypoint: dockerize -wait http://cmdbuild:8080 catalina.sh run
 
  geo:
+#  image: winsent/geoserver-alpine
   image: garudaru/geoserver 
   ports:
    - 8282:8080
-  restart: always 
+#  restart: always
+  depends_on:
+   - cmdbuild
   volumes:
    - /logs/geo:/usr/local/tomcat/logs 
   networks:
@@ -61,11 +81,14 @@ services:
 
  bim:
   image: garudaru/bimserver
+#  image: rsilva4/bimserver 
   ports:
    - 8383:8080
-  restart: always 
-  environment:
-     JAVA_OPTS: "-Xms128m -Xmx1024m"
+#  restart: always
+#  environment:
+#     JAVA_OPTS: "-Xms128m -Xmx1024m"
+  depends_on:
+   - cmdbuild
   volumes:
    - /logs/bim-log:/usr/local/tomcat/webapps/bimserver/WEB-INF/logs
    - /logs/bim:/usr/local/tomcat/logs
@@ -91,6 +114,7 @@ services:
    - postgres:db
   stdin_open: true
   volumes:
+#   - /logs/alfe/extension:/opt/alfresco/tomcat/shared/classes/alfresco/extension
    - .data/alfresco/extension/cmdbuild-custom-model-context.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuild-custom-model-context.xml
    - .data/alfresco/extension/cmdbuild-model-context.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuild-model-context.xml
    - .data/alfresco/extension/cmdbuildCustomModel.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuildCustomModel.xml
@@ -111,12 +135,14 @@ services:
    - 5434:5432
   environment:
     POSTGRES_PASSWORD: postgres
+##    PGDATA=./postgres/pgdata
     POSTGRES_USER: postgres
     POSTGRES_DB: alfresco
   volumes:
-  - alfpgsqlv:/var/lib/postgresql/data
+   - pgsqlv:/var/lib/postgresql/data
   networks:
    - alfresco-network
+
 
 networks:
    cmdbuild-network:
@@ -132,6 +158,4 @@ volumes:
   sharkv:
    driver: local
   pgsqlv:
-   driver: local
-  alfpgsqlv:
    driver: local
