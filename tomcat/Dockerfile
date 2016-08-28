@@ -9,7 +9,8 @@ ENV CATALINA_HOME="/usr/local/tomcat" \
     CMDBUILD_VERSION="2.4.0" 
 
 ENV PATH="$CATALINA_HOME/bin:$PATH" \
-    TOMCAT_TGZ_URL="http://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz"
+    TOMCAT_TGZ_URL="http://archive.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz"
+#    TOMCAT_TGZ_URL="http://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz"
 
 WORKDIR $CATALINA_HOME
 RUN set -x \

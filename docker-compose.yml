@@ -29,19 +29,14 @@ services:
 
 
  pgsql:
-#  image: garudaru/readypostgis
   image: garudaru/postgis
   restart: always
   ports:
    - 5432:5432
   env_file:
     - '.env'
-#  environment:
-#    POSTGRES_DB:  ""
-#    POSTGRES_PASSWORD: postgres
-#    PGDATA=./postgres/pgdata
-#    POSTGRES_USER: postgres
-#    POSTGRES_DB: cmdbuild 
+  environment:
+    POSTGRES_DB:  ""
   volumes:
    - pgsqlv:/var/lib/postgresql/data
 #   - /logs/postgis-data:/var/lib/postgresql/data
@@ -139,7 +134,7 @@ services:
     POSTGRES_USER: postgres
     POSTGRES_DB: alfresco
   volumes:
-   - pgsqlv:/var/lib/postgresql/data
+   - alfpgsqlv:/var/lib/postgresql/data
   networks:
    - alfresco-network
 
@@ -158,4 +153,6 @@ volumes:
   sharkv:
    driver: local
   pgsqlv:
+   driver: local
+  alfpgsqlv:
    driver: local

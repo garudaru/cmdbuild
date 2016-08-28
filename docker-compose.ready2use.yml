@@ -1,0 +1,10 @@
+version : '2'
+
+services:
+
+ pgsql:
+  image: garudaru/readypostgis
+  environment:
+    POSTGRES_DB:  "cmdbuild"
+
+
