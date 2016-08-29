@@ -40,7 +40,6 @@ services:
   volumes:
    - pgsqlv:/var/lib/postgresql/data
 #   - /logs/postgis-data:/var/lib/postgresql/data
-
   networks:
    - cmdbuild-network
 
@@ -71,6 +70,7 @@ services:
    - cmdbuild
   volumes:
    - /logs/geo:/usr/local/tomcat/logs 
+   - geov:/usr/local/tomcat/webapps/geoserver/data
   networks:
    - cmdbuild-network
 
@@ -79,9 +79,9 @@ services:
 #  image: rsilva4/bimserver 
   ports:
    - 8383:8080
-#  restart: always
-#  environment:
-#     JAVA_OPTS: "-Xms128m -Xmx1024m"
+  restart: always
+  environment:
+     JAVA_OPTS: "-Xms128m -Xmx1024m"
   depends_on:
    - cmdbuild
   volumes:
@@ -109,6 +109,7 @@ services:
    - postgres:db
   stdin_open: true
   volumes:
+   - alfdatav:/opt/alfresco/alf_data
 #   - /logs/alfe/extension:/opt/alfresco/tomcat/shared/classes/alfresco/extension
    - .data/alfresco/extension/cmdbuild-custom-model-context.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuild-custom-model-context.xml
    - .data/alfresco/extension/cmdbuild-model-context.xml:/opt/alfresco/tomcat/shared/classes/alfresco/extension/cmdbuild-model-context.xml
@@ -150,9 +151,11 @@ volumes:
    driver: local
   cmdbuploadv:
    driver: local
-  sharkv:
-   driver: local
   pgsqlv:
    driver: local
+  geov:
+   driver: local
   alfpgsqlv:
+   driver: local
+  alfdatav:
    driver: local
