@@ -1,7 +1,7 @@
 FROM garudaru/tomcat
 MAINTAINER garudaru <garudaru@gmail.com>
 
-ENV CMDBUILD_VERSION="2.4.0" \ 
+ENV CMDBUILD_VERSION="2.4.2" \ 
     LIB="http://jdbc.postgresql.org/download/postgresql-9.4.1208.jar"
 
 ENV CMDBUILD_SHARK_URL   http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/shark-cmdbuild-$CMDBUILD_VERSION.zip
