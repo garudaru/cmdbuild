@@ -5,7 +5,7 @@ ARG CMDBUILD_NAME=cmdbuild
 
 ENV CMDBUILD_REPORTS="additional-report-libs-1.5" \
     WEBAPPCMDBUILD="$CATALINA_HOME/webapps/$CMDBUILD_NAME/" \
-    CMDBUILD_VERSION="2.4.2" 
+    CMDBUILD_VERSION="2.4.3"
 
 ENV CMDBUILD_START_DIR="/opt/cmdbuild" \
     CMDBUILD_GET_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/cmdbuild-$CMDBUILD_VERSION.zip" \
@@ -13,7 +13,8 @@ ENV CMDBUILD_START_DIR="/opt/cmdbuild" \
     LIB="http://jdbc.postgresql.org/download/postgresql-9.4.1208.jar" 
 
 RUN set -x \
-	&& wget "$CMDBUILD_GET_URL" -O /tmp/cmdbuild.zip \
+	&& apk --no-cache --update add wget \
+	&& wget --no-check-certificate "$CMDBUILD_GET_URL" -O /tmp/cmdbuild.zip \
 	&& cd /tmp \
 	&& unzip cmdbuild.zip \
 	&& rm -rf cmdbuild.zip \
@@ -25,10 +26,12 @@ RUN set -x \
 	&& rm $CMDBUILD_NAME.war \
 	&& cd /tmp \
 	&& rm -rf /tmp/* \
-	&& wget "$CMDBUILD_REPORTS_URL"  -P /tmp/ \
+	&& wget --no-check-certificate "$CMDBUILD_REPORTS_URL"  -P /tmp/ \
         && unzip "$CMDBUILD_REPORTS.zip" \
         && mv $CMDBUILD_REPORTS/* $CATALINA_HOME/lib/ \
-	&& rm -rf /tmp/* \
+	&& apk --no-cache del wget \
+	&& rm -rf /tmp/* 
+RUN set -x \	
         && apk --no-cache --update add postgresql-client \
 	&& mkdir -p $CMDBUILD_START_DIR
 
