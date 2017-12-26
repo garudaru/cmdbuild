@@ -77,8 +77,7 @@ services:
   depends_on:
    - cmdbuild
   volumes:
-   - /logs/bim-log:/usr/local/tomcat/webapps/bimserver/WEB-INF/logs
-   - /logs/bim:/usr/local/tomcat/logs
+   - bimv:/bimhomedir
   networks:
    - cmdbuild-network
 
@@ -119,3 +118,6 @@ volumes:
    driver: local
   alfdatav:
    driver: local
+  bimv:  
+   driver: local
+   
