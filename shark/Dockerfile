@@ -1,21 +1,16 @@
-FROM garudaru/tomcat
+FROM tomcat:8-jre8-alpine
 MAINTAINER garudaru <garudaru@gmail.com>
 
-ENV CMDBUILD_VERSION="2.4.2" \ 
+ENV CMDBUILD_VERSION="2.5.0" \ 
     LIB="http://jdbc.postgresql.org/download/postgresql-9.4.1208.jar"
 
-ENV CMDBUILD_SHARK_URL   http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/shark-cmdbuild-$CMDBUILD_VERSION.zip
-
-#ADD $LIB $CATALINA_HOME/lib
+ARG CMDBUILD_SHARK_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/shark-cmdbuild-$CMDBUILD_VERSION.zip"
 
 RUN set -x \
-#	&& mkdir /opt \
-        && apk --no-cache --update add postgresql-client wget \
-#        && cd /opt/ \
+        && apk --no-cache --update add postgresql-client \
         && cd /tmp/ \
-        && wget --no-check-certificate -P "$CATALINA_HOME/lib/" "$LIB" \
-        && wget "$CMDBUILD_SHARK_URL" \
-        && mv shark* shark.zip \
+        && busybox wget -P "$CATALINA_HOME/lib/" "$LIB" \
+        && busybox wget -O /tmp/shark.zip "$CMDBUILD_SHARK_URL" \
         && unzip shark.zip  \
         && rm -rf shark.zip \
         && mv shark* shark \

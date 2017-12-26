@@ -2,7 +2,7 @@ version : '2'
 
 services:
  cmdbuild:
-  image: garudaru/cmdbuild
+  image: garudaru/cmdbuild:2.5
   ports:
    - 80:8080
   restart: always
@@ -38,7 +38,7 @@ services:
    - cmdbuild-network
 
  shark:
-  image: garudaru/shark
+  image: garudaru/shark:2.5
   restart: always
   env_file:
     - '.env'
@@ -55,7 +55,6 @@ services:
 #  entrypoint: dockerize -wait http://cmdbuild:8080 catalina.sh run
 
  geo:
-#  image: winsent/geoserver-alpine
   image: garudaru/geoserver 
   ports:
    - 8282:8080

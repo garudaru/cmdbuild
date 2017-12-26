@@ -11,3 +11,4 @@ Run
 Open  in browser: http://[your-ip-adress]/cmdbuild
 
 **For use Alfresco with metadata get directory [.data](https://github.com/garudaru/cmdbuild).**
+

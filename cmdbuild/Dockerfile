@@ -1,20 +1,19 @@
-FROM garudaru/tomcat
+FROM tomcat:8-jre8-alpine
 MAINTAINER garudaru <garudaru@gmail.com>
 
 ARG CMDBUILD_NAME=cmdbuild
 
 ENV CMDBUILD_REPORTS="additional-report-libs-1.5" \
     WEBAPPCMDBUILD="$CATALINA_HOME/webapps/$CMDBUILD_NAME/" \
-    CMDBUILD_VERSION="2.4.3"
+    CMDBUILD_VERSION="2.5.0" \
+    CMDBUILD_START_DIR="/opt/cmdbuild" \
+    XBEAN_URL="http://archive.apache.org/dist/xml/xmlbeans/binaries/incubated-xmlbeans-1.0.0.zip"
 
-ENV CMDBUILD_START_DIR="/opt/cmdbuild" \
-    CMDBUILD_GET_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/cmdbuild-$CMDBUILD_VERSION.zip" \
-    CMDBUILD_REPORTS_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/$CMDBUILD_REPORTS.zip" \
-    LIB="http://jdbc.postgresql.org/download/postgresql-9.4.1208.jar" 
+ARG CMDBUILD_GET_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/cmdbuild-$CMDBUILD_VERSION.zip" 
+ARG CMDBUILD_REPORTS_URL="http://downloads.sourceforge.net/project/cmdbuild/$CMDBUILD_VERSION/$CMDBUILD_REPORTS.zip" 
 
 RUN set -x \
-	&& apk --no-cache --update add wget \
-	&& wget --no-check-certificate "$CMDBUILD_GET_URL" -O /tmp/cmdbuild.zip \
+	&& wget -O /tmp/cmdbuild.zip "$CMDBUILD_GET_URL" \
 	&& cd /tmp \
 	&& unzip cmdbuild.zip \
 	&& rm -rf cmdbuild.zip \
@@ -24,18 +23,23 @@ RUN set -x \
 	&& mkdir $WEBAPPCMDBUILD \
 	&& unzip $CMDBUILD_NAME.war  -d $WEBAPPCMDBUILD\
 	&& rm $CMDBUILD_NAME.war \
+	&& cd "extras/tomcat-libs/6.0 or higher" \ 
+	&& ls -al \
+	&& cp *.jar $CATALINA_HOME/lib \ 
 	&& cd /tmp \
 	&& rm -rf /tmp/* \
-	&& wget --no-check-certificate "$CMDBUILD_REPORTS_URL"  -P /tmp/ \
+	&& wget  -P /tmp/ "$CMDBUILD_REPORTS_URL" \
         && unzip "$CMDBUILD_REPORTS.zip" \
-        && mv $CMDBUILD_REPORTS/* $CATALINA_HOME/lib/ \
-	&& apk --no-cache del wget \
-	&& rm -rf /tmp/* 
-RUN set -x \	
-        && apk --no-cache --update add postgresql-client \
+        && mv $CMDBUILD_REPORTS/* $CATALINA_HOME/lib/  \
+	&& wget  -O /tmp/xmlbean.zip "$XBEAN_URL" \
+        && unzip "xmlbean.zip" \
+        && cp /tmp/xmlbeans-1.0.0/lib/xbean.jar  $CATALINA_HOME/lib/ \
+	&& rm -rf /tmp/* \
+        && apk --no-cache --update add postgresql-client fontconfig ttf-dejavu\
 	&& mkdir -p $CMDBUILD_START_DIR
 
 COPY ./opt/cmdbuild $CMDBUILD_START_DIR
+
 RUN  set -x \
      && chmod a+x $CMDBUILD_START_DIR/creatdb.sh \
      && chmod a+x $CMDBUILD_START_DIR/start.sh
@@ -58,7 +62,6 @@ ENV  CMDBUILD_DB_TYPE="MANUAL" \
      GIS_ENABLED="false" 
 
 
-ADD  $LIB $CATALINA_HOME/lib
 WORKDIR $CATALINA_HOME
 
 VOLUME ["$WEBAPPCMDBUILD/WEB-INF/conf", "$WEBAPPCMDBUILD/upload"]
