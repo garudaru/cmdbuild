@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
 echo "WAITING DATABASE ..."
 echo ">> Waiting for postgres to start"
@@ -15,20 +16,14 @@ while ! psql -l -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER; do
   fi
 done
 
-echo "START UP ..."
-sh $CMDBUILD_START_DIR/creatdb.sh
-#sh $CMDBUILD_START_DIR/setupdb.sh
-#sh $CMDBUILD_START_DIR/setupldap.sh
+$CMDBUILD_START_DIR/creatdb.sh
+$CMDBUILD_START_DIR/setupdb.sh
 
-    for f in $CMDBUILD_START_DIR/*; do
-        case "$f" in
-            */setup*.sh)  echo "$0: running $f"; . "$f" ;;
-            *)     echo "$0: ignoring $f" ;;
-        esac
-        echo
-    done
 
+$CMDBUILD_START_DIR/config-cmdbuild.sh &
 
 echo "RUN CMDBUILD ..."
-"$@"
+#echo "Change user to tomcat"
+#su tomcat
 
+"$@"

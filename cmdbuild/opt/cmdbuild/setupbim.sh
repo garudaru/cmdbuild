@@ -1,9 +1,9 @@
 #!/bin/sh
 
-echo "#" >$WEBAPPCMDBUILD/WEB-INF/conf/bim.conf 
-echo -e "# `date`\n" >>$WEBAPPCMDBUILD/WEB-INF/conf/bim.conf 
+echo "#" >$CONFCMDBUILD/bim.conf 
+echo -e "# `date`\n" >>$CONFCMDBUILD/bim.conf 
 
-  cat  >>$WEBAPPCMDBUILD/WEB-INF/conf/bim.conf <<-EOF
+  cat  >>$CONFCMDBUILD/bim.conf <<-EOF
 	password=$BIM_USER_PASSWORD
 	url=$BIM_URL
 	enabled=$BIM_ENABLED

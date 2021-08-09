@@ -1,9 +1,9 @@
 #!/bin/sh
 
-echo "#" >$WEBAPPCMDBUILD/WEB-INF/conf/workflow.conf 
-echo -e "# `date`\n" >>$WEBAPPCMDBUILD/WEB-INF/conf/workflow.conf 
+echo "#" >$CONFCMDBUILD/workflow.conf 
+echo -e "# `date`\n" >>$CONFCMDBUILD/workflow.conf 
 
-cat  >>$WEBAPPCMDBUILD/WEB-INF/conf/workflow.conf <<-EOF
+cat  >>$CONFCMDBUILD/workflow.conf <<-EOF
 	password=$SHARK_USER_PASWORD
 	enabled=$SHARK_ENABLED
 	disableSynchronizationOfMissingVariables=$SHARK_DISABLE_SYNCHRONIZATION
