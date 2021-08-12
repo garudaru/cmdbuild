@@ -8,18 +8,25 @@ export POSTGRES="psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER "
 
 echo "CMDBUILD_DB_TYPE: $CMDBUILD_DB_TYPE"
 
+RETN_CODE=0
 
 if [ $CMDBUILD_DB_TYPE = "MANUAL" ]
 then
  echo "CMDBUILD MANUAL";
 elif $POSTGRES -d $POSTGRES_DB -lqt | cut -d \| -f 1 | grep -qw $POSTGRES_DB; then
  echo "$POSTGRES_DB database exists";
+ echo "CONFIG MODE is $CONFIG_MODE";
+ if [ "$CONFIG_MODE" = "FIRSTRUN" ]
+ then
+   echo "******** NO CONFIG RUNNING. USE SEIINGS FFROM DATABASE ********"
+   RETN_CODE=113
+ fi
 else
 
 echo  "CMDBUILD create database"
 unset PGPASSWORD
 
-if [ "$CMDBUILD_DB_TYPENODATABASE" = "NODATABASE" ]
+if [ "$CMDBUILD_DUMPNODATABASE" = "NODATABASE" ]
 then
   if [ $CMDBUILD_DB_TYPE = "DEMO" ]
   then
@@ -50,7 +57,6 @@ echo "Init DB"
 }
 
 fi
-
 
 
 

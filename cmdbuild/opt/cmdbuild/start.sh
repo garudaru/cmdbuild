@@ -16,11 +16,12 @@ while ! psql -l -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER; do
   fi
 done
 
-$CMDBUILD_START_DIR/creatdb.sh
+source $CMDBUILD_START_DIR/creatdb.sh
+echo "RETN CODE: $RETN_CODE"
 $CMDBUILD_START_DIR/setupdb.sh
 
-
-$CMDBUILD_START_DIR/config-cmdbuild.sh &
+echo "***  RUN CONFIG SETTINGS ****"
+$CMDBUILD_START_DIR/config-cmdbuild.sh $RETN_CODE &
 
 echo "RUN CMDBUILD ..."
 #echo "Change user to tomcat"
