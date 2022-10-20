@@ -1,4 +1,5 @@
-FROM tomcat:9.0.31-jdk11-openjdk
+FROM tomcat:9.0.58-jdk17-openjdk-bullseye
+
 MAINTAINER garudaru <garudaru@gmail.com>
 
 WORKDIR $CATALINA_HOME
@@ -8,7 +9,7 @@ ARG CMDBUILD_NAME=cmdbuild
 ENV CMDBUILD_REPORTS="additional-report-libs-1.5" \
     WEBAPPCMDBUILD="$CATALINA_HOME/webapps/$CMDBUILD_NAME" \
     CONFCMDBUILD="$CATALINA_HOME/conf/$CMDBUILD_NAME" \
-    CMDBUILD_VERSION="3.3.2" \
+    CMDBUILD_VERSION="3.4.1" \
     CMDBUILD_START_DIR="/opt/cmdbuild" \
     XBEAN_URL="http://archive.apache.org/dist/xml/xmlbeans/binaries/incubated-xmlbeans-1.0.0.zip"
 

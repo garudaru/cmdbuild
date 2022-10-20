@@ -1,7 +1,10 @@
 #!/bin/sh
 
-if [ $CMDBUILD_DB_TYPE != "MANUAL" ]
+echo "CMDBUILD_DB_TYPE: >$CMDBUILD_DB_TYPE<"
+
+if [ "$CMDBUILD_DB_TYPE" != "MANUAL" ]
 then
+  echo "SETUP DB SCRIPT ..."
   POSTGRES_URL="$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB" 
 
   sed '/^\w*#/d' $CONFCMDBUILD/database.conf  | grep "db.url" | grep $POSTGRES_URL 

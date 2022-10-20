@@ -10,7 +10,7 @@ echo "CMDBUILD_DB_TYPE: $CMDBUILD_DB_TYPE"
 
 RETN_CODE=0
 
-if [ $CMDBUILD_DB_TYPE = "MANUAL" ]
+if [ "$CMDBUILD_DB_TYPE" = "MANUAL" ]
 then
  echo "CMDBUILD MANUAL";
 elif $POSTGRES -d $POSTGRES_DB -lqt | cut -d \| -f 1 | grep -qw $POSTGRES_DB; then
@@ -18,7 +18,7 @@ elif $POSTGRES -d $POSTGRES_DB -lqt | cut -d \| -f 1 | grep -qw $POSTGRES_DB; th
  echo "CONFIG MODE is $CONFIG_MODE";
  if [ "$CONFIG_MODE" = "FIRSTRUN" ]
  then
-   echo "******** NO CONFIG RUNNING. USE SEIINGS FFROM DATABASE ********"
+   echo "******** NO CONFIG RUNNING. USE SEIINGS FROM DATABASE ********"
    RETN_CODE=113
  fi
 else
@@ -40,13 +40,13 @@ fi
 echo "Init DB"
 { # try
 
-    echo "----------------------------------------------------------------"
+    echo "--------------- ENVIRONMENT SET ---------------------------------"
     env
-    echo "----------------------------------------------------------------"
+    echo "--------------- DATABASE.CONF   --------------------------------"
     cat $CATALINA_HOME/conf/cmdbuild/database.conf
-    echo "----------------------------------------------------------------"
+    echo "--------------- USER  ------------------------------------------"
     echo `whoami`
-    echo "----------------------------------------------------------------"
+    echo "--------------- CREATE DB --------------------------------------"
     echo "$CATALINA_HOME/webapps/cmdbuild/cmdbuild.sh dbconfig create $CMDBUILD_DUMP -configfile $CATALINA_HOME/conf/cmdbuild/database.conf"
     echo "----------------------------------------------------------------"
     bash $CATALINA_HOME/webapps/cmdbuild/cmdbuild.sh dbconfig create $CMDBUILD_DUMP -configfile $CATALINA_HOME/conf/cmdbuild/database.conf
