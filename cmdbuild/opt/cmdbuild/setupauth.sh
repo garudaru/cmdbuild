@@ -37,6 +37,8 @@ then
   $CATALINA_HOME/webapps/cmdbuild/cmdbuild.sh restws setconfig org.cmdbuild.auth.ldap.basedn "$AUTH_LDAP_BASEDN"
   $CATALINA_HOME/webapps/cmdbuild/cmdbuild.sh restws setconfig org.cmdbuild.auth.ldap.bind.attribute $AUTH_LDAP_BIND_ATTRIBUTE
   $CATALINA_HOME/webapps/cmdbuild/cmdbuild.sh restws setconfig org.cmdbuild.auth.ldap.search.filter $AUTH_LDAP_SEARCH_FILTER
+  $CATALINA_HOME/webapps/cmdbuild/cmdbuild.sh restws setconfig org.cmdbuild.auth.ldap.enable true
+
 
 #  cat  >>$CONFCMDBUILD/auth.conf <<-EOF
 #
